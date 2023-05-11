@@ -128,3 +128,157 @@ ggplot(NULL,mapping=aes(x=year,y=mean_rev)) + geom_line(data=gbyear_nonfiction,a
 sum(gbyear_nonfiction$mean_rev) # $53,137,470 revenue earned for nonfiction
 sum(gbyear_fiction$mean_rev) # $76,127,081 revenue earned for fiction
 
+#_________________________________________________________________________________________________________________
+#Analysis
+### Method 1 - Regression Analysis
+amazon$genre_factor <- as.factor(amazon$genre)
+
+#does price have an effect on sales while controlling for other variables?
+reg1<-lm(sales~price+genre_factor+user_rating+factor(year)+factor(author), data=amazon)
+stargazer(reg1, type = "text", keep = c("genre_factor", "price","user_rating", "author"), se=list(cse(reg1)))
+
+ggplot(amazon, aes(sales, price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Sales", y = "Prices")
+
+#validate with N-fold Validation
+set.seed(2023)
+trainfold <- trainControl(method="cv", number=10, savePredictions = TRUE)
+
+modelfold <- train(sales~price, data=amazon, method = "lm", trControl=trainfold)
+summary(modelfold)
+
+modelfold$finalModel
+modelfold$pred
+modelfold$resample
+
+#Both RMSE (around 350,000 - 500,000) and MAE (around 300,000) are relatively consistent, meaning that the prediction is replicated relatively accurately across all the folds. 
+
+#let's double check using a linear model
+reg2 <- lm(sales~price, data=amazon)
+stargazer(reg2, type = "text", se=list(cse(reg2)))
+
+# In the first technique, we decided to use multiple regression to uncover the effect of listed book price on number of sales of such book. The reason we did this is to understand whether how expensive a book is listed on Amazon have a positive or negative, or no effect on how well this book sells. Additionally, we include control variables such as genre (as a factor variable), buyer rating (out of 5 stars), and authors (as a factor variable). Together, the findings of this regression should inform us about elements that could potentially lead to a bestseller. 
+
+# The regression shows that with each dollar increase in price, the number of sales decrease by around 5,664 units. This result is significant at 90% level. Additionally, Non-fiction books are predicted to perform better than fiction books, outselling them by 89,421 units on average, while being significant at 90% level as well. Notably, we found that buyer ratings are not found to lead to higher sales numbers, since the regression model found no significant relationship. 
+
+# We want to validate it to see if this insight is indeed accurate. Using an N-fold technique, the model predicts similar results, with each dollar increase in price, the number of sales decrease by around 4,725 units, with the constant being 540,032.9. This result is shown to be 99% significant. Using a simple regression as comparison, the regression model predicts a very similar result to the n-fold model. More importantly, across all the folds, both RMSE (around 350,000 - 500,000) and MAE (around 300,000), meaning that the prediction is replicated accurately across all the folds.
+
+#_________________________________________________________________________________________________________________
+### Method 2 - Cluster Analysis
+#Prepare Data for Cluster Analysis
+
+#group by author
+author <- amazon %>% group_by(author) %>% summarise(n=n() , mean_reviews = mean(reviews), mean_price = mean(price), mean_rating = mean(user_rating), mean_sales = mean(sales), mean_revenue = mean(revenue), genre=genre)
+author <- author[!duplicated(author),]
+df2 <- scale(author[c(2:7)])  
+df3 <- as.data.frame(df2)
+
+#correlations
+cor(df2)
+
+#find optimal numbers of clusters
+#elbow score
+fviz_nbclust(df3, kmeans, method = "wss") # suggests that 6-clusters is the best
+
+#silhouette score
+fviz_nbclust(df3,kmeans,method="silhouette") # suggests that 2-clusters is the best
+
+#_________________________________________________________________________________________________________________
+#Hierarchical Cluster
+distance=dist(df3)
+df3.hcluster <- hclust(distance)
+
+plot(df3.hcluster)
+
+dend <- as.dendrogram(df3.hcluster)   #save the cluster as a dendrogram
+labels(dend) <- author$author 
+dend <- color_labels(dend, k=10) 
+dend <- color_branches(dend, k=10)
+
+dend <- assign_values_to_leaves_nodePar(dend,19,"pch")
+dend <- assign_values_to_leaves_nodePar(dend, 0.5,"lab.cex") 
+plot(dend)
+
+#Character clusters based on cutree
+hcluster=cutree(df3.hcluster,4)   #specify 6 cuts here
+
+#tabulate membership
+table(hcluster)   #look at the cuts
+
+#look at characteristics by cluster
+aggregate(df3, list(hcluster),mean)
+
+#_________________________________________________________________________________________________________________
+#K-Means cluster analysis
+
+#2 clusters
+set.seed(123)
+cluster.df3 <- kmeans(df3,2,nstart = 20)
+
+#now we put the clustered data into the original dataframe 'amazon'
+author$cluster2 <- cluster.df3$cluster #this line adds the cluster as a new column to df
+
+#create customer by cluster
+trans_cluster2 <- author %>% group_by(cluster2) %>% summarise(count=n(),price = mean(mean_price),
+                                                              frequency = mean(n), 
+                                                              rating = mean(mean_rating),
+                                                              sales = mean(mean_sales),
+                                                              revenue = mean(mean_revenue))
+
+#look at cluster centers on each of the variables
+cluster.df3$centers[1:2]
+cluster_center_df <- data.frame("cluster"=c(1,2),
+                                "center"=cluster.df3$centers[1:2])
+
+#Is there a significant difference in mean value between clusters?
+model3 <- aov(center~cluster,data = cluster_center_df)
+summary(model3)
+
+cluster.df3[["centers"]]
+
+wss2 <- sum(cluster.df3$withinss)
+
+#plot k-means
+fviz_cluster(cluster.df3, data = author[c(2:7)],
+             palette = c("#2E9FDF", "#b14c5f"), 
+             geom = "point",
+             ellipse.type = "convex", 
+             ggtheme = theme_bw())
+
+#6 clusters
+cluster5.df3 <- kmeans(df3,6,nstart = 20)
+
+#now we put the clustered data into the original dataframe df
+author$cluster6 <- cluster5.df3$cluster   #this line adds the cluster as a new column to dt
+
+trans_cluster2 <- author %>% group_by(cluster6) %>% summarise(count=n(),price = mean(mean_price),
+                                                              frequency = mean(n), 
+                                                              rating = mean(mean_rating),
+                                                              sales = mean(mean_sales),
+                                                              revenue = mean(mean_revenue))
+
+#look at cluster centers on each of the variables
+cluster5.df3$centers[1:6]
+cluster5_center_df <- data.frame("cluster"=c(1,2,3,4,5,6),
+                                 "center"=cluster5.df3$centers[1:6])
+
+#Is there a significant difference in mean value between clusters?
+model4 <- aov(center~cluster,data = cluster5_center_df)
+summary(model4)
+
+cluster5.df3[["centers"]]
+
+wss3 <- sum(cluster5.df3$withinss)
+
+#plot k-means
+fviz_cluster(cluster5.df3, author[c(2:7)],
+             palette = c("#2E9FDF", "#00AFBB", "#E7B800","#b14c5f","#729e53","#D2B4DE"), 
+             geom = "point",
+             ellipse.type = "convex", 
+             ggtheme = theme_bw())
+
+author$genre[author$cluster2==1]
+author$genre[author$cluster6==6]
+
