@@ -17,7 +17,7 @@ This time, I got to collaborate with old and new partners
 
 The three main steps we took were an EDA analysis, statistical modeling (using multiple regression and cluster analysis), and finding recommendations. For an in-depth look at our dataset, please take a look at our report [here](https://docs.google.com/document/d/1C4GuHYbQA7oyNGj8uBtQ5z29XH_jUW7wvHv6qw9chSU/edit?usp=sharing). The project's charts and figures can be found in our [appendix](https://docs.google.com/document/d/1n_J_oEVUa7tbNdvfSLz08R5ytFA4DRpF6xceAV5NmT4/edit?usp=sharing). 
 
-![Amazon Project Appendix](https://cdn.discordapp.com/attachments/663146570765566003/1108158741251096607/image.png "My Personal Favorite Visual")
+![Amazon Project Appendix](https://cdn.discordapp.com/attachments/663146570765566003/1108159336800333946/image.png "My Personal Favorite Visual")
 
 Overall, I learned a great deal of different ways to visualize data in a simple yet effective manner and how to utilize different modeling techniques such as hierarchical clustering, k-means clustering, and multiple regression. I realized how powerful R can be and how our team managed to transform a small dataset into a full-blown analysis. Looking forward to use it more often in the near future!
 
