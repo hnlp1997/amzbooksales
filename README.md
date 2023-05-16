@@ -1,4 +1,4 @@
-# Amazon's Best-Selling Books from 2009-2019 Project (R)
+# Amazon's Best-Selling Books 2009-2019 Project (R)
 
 In my Marketing Analytics class in the SCU MSBA program, I got the opportunity to work on my 2nd data analytics project, this time utilizing
 R. Prior to the class, I had never used it before. Luckily, most of R's functionality and commands are quite similar to Python Pandas,
