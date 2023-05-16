@@ -8,7 +8,7 @@ The dataset contains 550 rows of best-selling books sold on Amazon from 2009 to 
 dataset, including the book title, author, user rating, number of reviews, price of the book, the year the book was considered a 
 “best-seller,” and book genre. 
 
-![Initial dataset](https://cdn.discordapp.com/attachments/663146570765566003/1108148032232489020/image.png "First 15 Rows of the Dataset")
+![Initial dataset](https://cdn.discordapp.com/attachments/663146570765566003/1108157796698046464/image.png "First 15 Rows of the Dataset")
 
 This time, I got to collaborate with old and new partners
 [Aaron Huang](https://www.linkedin.com/in/aaron-huang-scu/), [Aditi Bagepalli](https://www.linkedin.com/in/aditibagepalli/), 
