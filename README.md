@@ -15,7 +15,7 @@ This time, I got to collaborate with old and new partners
 [Riley Kates](https://www.linkedin.com/in/riley-kates/), and 
 [Yasmeen Gavande](https://www.linkedin.com/in/angel-investing/). Our task was to figure out what factors would lead to a best-selling book.
 
-The three main steps we took were an EDA analysis, statistical modeling (using multiple regression and cluster analysis), and finding recommendations. For an in-depth look at our dataset, please take a look at our report [here](https://docs.google.com/document/d/1C4GuHYbQA7oyNGj8uBtQ5z29XH_jUW7wvHv6qw9chSU/edit?usp=sharing). The project's charts and figures can be found in our [appendix](https://docs.google.com/document/d/1n_J_oEVUa7tbNdvfSLz08R5ytFA4DRpF6xceAV5NmT4/edit?usp=sharing). 
+The three main steps we took were an EDA analysis, statistical modeling (using multiple regression and cluster analysis), and finding recommendations. For an in-depth look at our **analysis**, please take a look at our report [here](https://docs.google.com/document/d/1C4GuHYbQA7oyNGj8uBtQ5z29XH_jUW7wvHv6qw9chSU/edit?usp=sharing). The project's charts and figures can be found in our [appendix](https://docs.google.com/document/d/1n_J_oEVUa7tbNdvfSLz08R5ytFA4DRpF6xceAV5NmT4/edit?usp=sharing). 
 
 ![Amazon Project Appendix](https://cdn.discordapp.com/attachments/663146570765566003/1108159336800333946/image.png "My Personal Favorite Visual")
 
