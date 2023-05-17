@@ -4,7 +4,7 @@ In my Marketing Analytics class in the SCU MSBA program, I got the opportunity t
 R. Prior to the class, I had never used it before. Luckily, most of R's functionality and commands are quite similar to Python Pandas,
 which made learning it much more intuitive.
 
-The dataset contains 550 rows of best-selling books sold on Amazon from 2009 to 2019. There are 7 variables available in the 
+The dataset "bestsellers with categories.csv" contains 550 rows of best-selling books sold on Amazon from 2009 to 2019. There are 7 variables available in the 
 dataset, including the book title, author, user rating, number of reviews, price of the book, the year the book was considered a 
 “best-seller,” and book genre. 
 
